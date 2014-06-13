@@ -1,0 +1,10 @@
+build
+build.txt
+*.pbxuser
+*.tm_build_errors
+*.perspectivev3
+*.xcworkspace
+*.ipa
+xcuserdata
+xcshareddata
+.DS_Store
