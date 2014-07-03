@@ -6,44 +6,53 @@ enum Operator {
 
 class CalculatorViewController: UIViewController {
 
-	// First Row
+	var constraintForFirstColumn: AnyObject[]?
+	var constraintForSecondColumn: AnyObject[]?
+	var constraintForThirdColumn: AnyObject[]?
+	var constraintForFourthColumn: AnyObject[]?
+
 	var constraintsForFirstRow: AnyObject[]?
-	@IBOutlet var sevenButton: UIButton!
-	@IBOutlet var eightButton: UIButton!
-	@IBOutlet var nineButton: UIButton!
-	@IBOutlet var divButton: UIButton!
-
-	// Second Row
 	var constraintsForSecondRow: AnyObject[]?
-	@IBOutlet var fourButton: UIButton!
-	@IBOutlet var fiveButton: UIButton!
-	@IBOutlet var sixButton: UIButton!
-	@IBOutlet var mulButton: UIButton!
-
-	// Third Row
 	var constraintsForThirdRow: AnyObject[]?
+	var constraintsForFourthRow: AnyObject[]?
+
+	@IBOutlet var zeroButton: UIButton!
 	@IBOutlet var oneButton: UIButton!
 	@IBOutlet var twoButton: UIButton!
 	@IBOutlet var threeButton: UIButton!
-	@IBOutlet var subButton: UIButton!
+	@IBOutlet var fourButton: UIButton!
+	@IBOutlet var fiveButton: UIButton!
+	@IBOutlet var sixButton: UIButton!
+	@IBOutlet var sevenButton: UIButton!
+	@IBOutlet var eightButton: UIButton!
+	@IBOutlet var nineButton: UIButton!
 
-	// Fourth Row
-	var constraintsForFourthRow: AnyObject[]?
-	@IBOutlet var dotButton: UIButton!
-	@IBOutlet var zeroButton: UIButton!
-	@IBOutlet var equlButton: UIButton!
 	@IBOutlet var addButton: UIButton!
+	@IBOutlet var subButton: UIButton!
+	@IBOutlet var mulButton: UIButton!
+	@IBOutlet var divButton: UIButton!
+
+	@IBOutlet var dotButton: UIButton!
+	@IBOutlet var equlButton: UIButton!
 
 	@IBOutlet var viewerLabel: UILabel!
+	@IBOutlet var clearButton: UIButton!
+
 	var previousNumeric: NSMutableString! = NSMutableString(string: "0")
 	var currentNumeric: NSMutableString! = NSMutableString(string: "0")
 	var operatorType: Operator = .NONE
 
-	// For Layout Constraint
 	override func viewWillLayoutSubviews() {
+
+		/* Horizontal Constraint */
+
 		let buttonWidth = 55.0
 		let unusedHorizontalSpace: CGFloat = self.view.bounds.size.width - (buttonWidth * 4)
-		let spaceBetweenEachButton: NSNumber = NSNumber(double: unusedHorizontalSpace / 5)
+		let spaceBetweenEachButtonForHorizontal: NSNumber = NSNumber(double: unusedHorizontalSpace / 5)
+
+		let horizontalVisualFormat: String = "H:|-(space)-[b1]-(space)-[b2]-(space)-[b3]-(space)-[b4]-(space)-|"
+		let horizontalButtonKeys = ["b1", "b2", "b3", "b4"]
+		let horizontalSpaceMetrics = NSDictionary(object: spaceBetweenEachButtonForHorizontal, forKey: "space")
 
 		if constraintsForFirstRow {
 			self.view.removeConstraints(constraintsForFirstRow)
@@ -52,15 +61,42 @@ class CalculatorViewController: UIViewController {
 			self.view.removeConstraints(constraintsForFourthRow)
 		}
 
-		constraintsForFirstRow = NSLayoutConstraint.constraintsWithVisualFormat("H:|-(space)-[seven]-(space)-[eight]-(space)-[nine]-(space)-[div]-(space)-|", options: NSLayoutFormatOptions.AlignAllCenterY, metrics: NSDictionary(object: spaceBetweenEachButton, forKey: "space"), views: NSDictionary(objects: [sevenButton, eightButton, nineButton, divButton], forKeys: ["seven", "eight", "nine", "div"]))
-		constraintsForSecondRow = NSLayoutConstraint.constraintsWithVisualFormat("H:|-(space)-[four]-(space)-[five]-(space)-[six]-(space)-[mul]-(space)-|", options:NSLayoutFormatOptions.AlignAllCenterY, metrics: NSDictionary(object: spaceBetweenEachButton, forKey: "space"), views: NSDictionary(objects: [fourButton, fiveButton, sixButton, mulButton], forKeys: ["four", "five", "six", "mul"]))
-		constraintsForThirdRow = NSLayoutConstraint.constraintsWithVisualFormat("H:|-(space)-[one]-(space)-[two]-(space)-[three]-(space)-[sub]-(space)-|", options:NSLayoutFormatOptions.AlignAllCenterY, metrics: NSDictionary(object: spaceBetweenEachButton, forKey: "space"), views: NSDictionary(objects: [oneButton, twoButton, threeButton, subButton], forKeys: ["one", "two", "three", "sub"]))
-		constraintsForFourthRow = NSLayoutConstraint.constraintsWithVisualFormat("H:|-(space)-[dot]-(space)-[zero]-(space)-[equl]-(space)-[add]-(space)-|", options:NSLayoutFormatOptions.AlignAllCenterY, metrics: NSDictionary(object: spaceBetweenEachButton, forKey: "space"), views: NSDictionary(objects: [dotButton, zeroButton, equlButton, addButton], forKeys: ["dot", "zero", "equl", "add"]))
+		constraintsForFirstRow = NSLayoutConstraint.constraintsWithVisualFormat(horizontalVisualFormat, options: NSLayoutFormatOptions.DirectionLeadingToTrailing, metrics: horizontalSpaceMetrics, views: NSDictionary(objects: [sevenButton, eightButton, nineButton, divButton], forKeys: horizontalButtonKeys))
+		constraintsForSecondRow = NSLayoutConstraint.constraintsWithVisualFormat(horizontalVisualFormat, options:NSLayoutFormatOptions.DirectionLeadingToTrailing, metrics: horizontalSpaceMetrics, views: NSDictionary(objects: [fourButton, fiveButton, sixButton, mulButton], forKeys: horizontalButtonKeys))
+		constraintsForThirdRow = NSLayoutConstraint.constraintsWithVisualFormat(horizontalVisualFormat, options:NSLayoutFormatOptions.DirectionLeadingToTrailing, metrics: horizontalSpaceMetrics, views: NSDictionary(objects: [oneButton, twoButton, threeButton, subButton], forKeys: horizontalButtonKeys))
+		constraintsForFourthRow = NSLayoutConstraint.constraintsWithVisualFormat(horizontalVisualFormat, options:NSLayoutFormatOptions.DirectionLeadingToTrailing, metrics: horizontalSpaceMetrics, views: NSDictionary(objects: [dotButton, zeroButton, equlButton, addButton], forKeys: horizontalButtonKeys))
 
 		self.view.addConstraints(constraintsForFirstRow)
 		self.view.addConstraints(constraintsForSecondRow)
 		self.view.addConstraints(constraintsForThirdRow)
 		self.view.addConstraints(constraintsForFourthRow)
+
+		/* Vertical Constraint */
+
+		let unusedVerticalSpace: CGFloat = self.view.bounds.size.height - CGRectGetMaxY(viewerLabel.frame) - (buttonWidth * 5)
+		let spaceBetweenEachButtonForVertical: NSNumber = NSNumber(double: unusedVerticalSpace / 6)
+		let topSpace: NSNumber = NSNumber(double: unusedVerticalSpace / 6 + CGRectGetMaxY(viewerLabel.frame))
+
+		let verticalVisualFormat: String = "V:|-(topSpace)-[b1]-(space)-[b2]-(space)-[b3]-(space)-[b4]-(space)-[b5]-(space)-|"
+		let verticalButtonKeys = ["b1", "b2", "b3", "b4", "b5"]
+		let verticalSpaceMetrics = NSDictionary(objects: [topSpace, spaceBetweenEachButtonForVertical], forKeys: ["topSpace", "space"])
+
+		if constraintForFirstColumn {
+			self.view.removeConstraints(constraintForFirstColumn)
+			self.view.removeConstraints(constraintForSecondColumn)
+			self.view.removeConstraints(constraintForThirdColumn)
+			self.view.removeConstraints(constraintForFourthColumn)
+		}
+
+		constraintForFirstColumn = NSLayoutConstraint.constraintsWithVisualFormat(verticalVisualFormat, options:NSLayoutFormatOptions.DirectionLeadingToTrailing , metrics: verticalSpaceMetrics, views:NSDictionary(objects: [clearButton, sevenButton, fourButton, oneButton, dotButton], forKeys: verticalButtonKeys))
+		constraintForSecondColumn = NSLayoutConstraint.constraintsWithVisualFormat(verticalVisualFormat, options:NSLayoutFormatOptions.DirectionLeadingToTrailing , metrics: verticalSpaceMetrics, views:NSDictionary(objects: [clearButton, eightButton, fiveButton, twoButton, zeroButton], forKeys: verticalButtonKeys))
+		constraintForThirdColumn = NSLayoutConstraint.constraintsWithVisualFormat(verticalVisualFormat, options:NSLayoutFormatOptions.DirectionLeadingToTrailing , metrics: verticalSpaceMetrics, views:NSDictionary(objects: [clearButton, nineButton, sixButton, threeButton, equlButton], forKeys: verticalButtonKeys))
+		constraintForFourthColumn = NSLayoutConstraint.constraintsWithVisualFormat(verticalVisualFormat, options:NSLayoutFormatOptions.DirectionLeadingToTrailing , metrics: verticalSpaceMetrics, views:NSDictionary(objects: [clearButton, divButton, mulButton, subButton, addButton], forKeys: verticalButtonKeys))
+
+		self.view.addConstraints(constraintForFirstColumn)
+		self.view.addConstraints(constraintForSecondColumn)
+		self.view.addConstraints(constraintForThirdColumn)
+		self.view.addConstraints(constraintForFourthColumn)
 	}
 
 	@IBAction func pressNumericAction(sender: AnyObject) {
