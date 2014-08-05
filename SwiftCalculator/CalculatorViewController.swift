@@ -6,15 +6,15 @@ enum Operator {
 
 class CalculatorViewController: UIViewController {
 
-	var constraintForFirstColumn: AnyObject[]?
-	var constraintForSecondColumn: AnyObject[]?
-	var constraintForThirdColumn: AnyObject[]?
-	var constraintForFourthColumn: AnyObject[]?
+	var constraintForFirstColumn: [AnyObject]!
+	var constraintForSecondColumn: [AnyObject]!
+	var constraintForThirdColumn: [AnyObject]!
+	var constraintForFourthColumn: [AnyObject]!
 
-	var constraintsForFirstRow: AnyObject[]?
-	var constraintsForSecondRow: AnyObject[]?
-	var constraintsForThirdRow: AnyObject[]?
-	var constraintsForFourthRow: AnyObject[]?
+	var constraintsForFirstRow: [AnyObject]!
+	var constraintsForSecondRow: [AnyObject]!
+	var constraintsForThirdRow: [AnyObject]!
+	var constraintsForFourthRow: [AnyObject]!
 
 	@IBOutlet var zeroButton: UIButton!
 	@IBOutlet var oneButton: UIButton!
@@ -47,14 +47,14 @@ class CalculatorViewController: UIViewController {
 		/* Horizontal Constraint */
 
 		let buttonWidth = 55.0
-		let unusedHorizontalSpace: CGFloat = self.view.bounds.size.width - (buttonWidth * 4)
-		let spaceBetweenEachButtonForHorizontal: NSNumber = NSNumber(double: unusedHorizontalSpace / 5)
+		let unusedHorizontalSpace = Double(CGRectGetWidth(self.view.bounds)) - Double(buttonWidth * 4)
+		let spaceBetweenEachButtonForHorizontal = NSNumber(double: unusedHorizontalSpace / 5)
 
 		let horizontalVisualFormat: String = "H:|-(space)-[b1]-(space)-[b2]-(space)-[b3]-(space)-[b4]-(space)-|"
 		let horizontalButtonKeys = ["b1", "b2", "b3", "b4"]
 		let horizontalSpaceMetrics = NSDictionary(object: spaceBetweenEachButtonForHorizontal, forKey: "space")
 
-		if constraintsForFirstRow {
+		if constraintsForFirstRow != nil {
 			self.view.removeConstraints(constraintsForFirstRow)
 			self.view.removeConstraints(constraintsForSecondRow)
 			self.view.removeConstraints(constraintsForThirdRow)
@@ -73,15 +73,15 @@ class CalculatorViewController: UIViewController {
 
 		/* Vertical Constraint */
 
-		let unusedVerticalSpace: CGFloat = self.view.bounds.size.height - CGRectGetMaxY(viewerLabel.frame) - (buttonWidth * 5)
+		let unusedVerticalSpace = Double(CGRectGetHeight(self.view.bounds)) - Double(CGRectGetMaxY(viewerLabel.frame)) - Double(buttonWidth * 5)
 		let spaceBetweenEachButtonForVertical: NSNumber = NSNumber(double: unusedVerticalSpace / 6)
-		let topSpace: NSNumber = NSNumber(double: unusedVerticalSpace / 6 + CGRectGetMaxY(viewerLabel.frame))
+		let topSpace: NSNumber = NSNumber(double: unusedVerticalSpace / 6 + Double(CGRectGetMaxY(viewerLabel.frame)))
 
-		let verticalVisualFormat: String = "V:|-(topSpace)-[b1]-(space)-[b2]-(space)-[b3]-(space)-[b4]-(space)-[b5]-(space)-|"
+		let verticalVisualFormat = "V:|-(topSpace)-[b1]-(space)-[b2]-(space)-[b3]-(space)-[b4]-(space)-[b5]-(space)-|"
 		let verticalButtonKeys = ["b1", "b2", "b3", "b4", "b5"]
 		let verticalSpaceMetrics = NSDictionary(objects: [topSpace, spaceBetweenEachButtonForVertical], forKeys: ["topSpace", "space"])
 
-		if constraintForFirstColumn {
+		if constraintForFirstColumn != nil {
 			self.view.removeConstraints(constraintForFirstColumn)
 			self.view.removeConstraints(constraintForSecondColumn)
 			self.view.removeConstraints(constraintForThirdColumn)
@@ -153,9 +153,9 @@ class CalculatorViewController: UIViewController {
 			return
 		}
 
-		var previousNumber: NSDecimalNumber = NSDecimalNumber(string: previousNumeric)
-		var currentNumber: NSDecimalNumber = NSDecimalNumber(string: currentNumeric)
-		var formatter: NSNumberFormatter = NSNumberFormatter()
+		var previousNumber = NSDecimalNumber(string: previousNumeric)
+		var currentNumber = NSDecimalNumber(string: currentNumeric)
+		var formatter = NSNumberFormatter()
 		formatter.maximumFractionDigits = 4
 		formatter.minimumIntegerDigits = 1
 
